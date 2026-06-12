@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portail de Signalement Incident - Jon Snow Tech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Variables de design (Design System) */
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --success: #10b981;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- NAVIGATION --- */
+        .navbar {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+        }
+
+        /* --- CORPS PRINCIPAL --- */
+        .container {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Gestion des pages (Sections) */
+        .page-section {
+            display: none; /* Caché par défaut, activé en JS */
+        }
+
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- GRILLE & CARTES --- */
+        .grid-dashboard {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-dashboard { grid-template-columns: 1fr; }
+            .navbar { flex-direction: column; gap: 1rem; }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* --- FORMULAIRES --- */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            font-family: inherit;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background-color: #f8fafc;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: var(--surface);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* --- TABLEAUX / HISTORIQUE --- */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .history-table th, .history-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-table th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background-color: #fee2e2;
+            color: var(--danger);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            margin-top: auto;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        footer span {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-logo">
+            <i class="fa-solid fa-shield-halved"></i> SecurityPortal
+        </div>
+        <ul class="nav-links">
+            <li><a onclick="switchPage('home')" id="nav-home" class="active">Tableau de bord</a></li>
+            <li><a onclick="switchPage('report')" id="nav-report">Nouveau Signalement</a></li>
+            <li><a onclick="switchPage('about')" id="nav-about">À propos & Règles</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+
+        <section id="page-home" class="page-section active">
+            <div class="grid-dashboard">
+                <div>
+                    <div class="card">
+                        <h3 class="card-title"><i class="fa-solid fa-chart-line"></i> Activité récente</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 1rem;">Vos derniers signalements générés sur cette session :</p>
+                        <div style="overflow-x: auto;">
+                            <table class="history-table">
+                                <thead>
+                                    <tr>
+                                        <th>Numéro Ciblé</th>
+                                        <th>Date</th>
+                                        <th>Statut</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-logs">
+                                    <tr>
+                                        <td colspan="3" style="text-align: center; color: var(--text-muted);">Aucun signalement généré pour le moment.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white;">
+                        <h3 class="card-title" style="color: white;"><i class="fa-solid fa-bolt"></i> Action Rapide</h3>
+                        <p style="margin-bottom: 1.5rem; opacity: 0.9;">Besoin de documenter d'urgence un comportement malveillant ?</p>
+                        <button class="btn" style="background: white; color: var(--primary);" onclick="switchPage('report')">
+                            Ouvrir l'assistant
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-report" class="page-section">
+            <div style="max-width: 600px; margin: 0 auto;" class="card">
+                <h3 class="card-title"><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i> Signaler une Infraction</h3>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Remplissez les détails ci-dessous pour structurer automatiquement une plainte officielle par email.</p>
+                
+                <div class="form-group">
+                    <label for="phoneNumber">Numéro de téléphone du contrevenant</label>
+                    <input type="text" id="phoneNumber" class="form-control" placeholder="Ex: +33612345678" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="infractionType">Type d'infraction principal</label>
+                    <select id="infractionType" class="form-control">
+                        <option value="Harcèlement répété et menaces">Harcèlement répété et menaces</option>
+                        <option value="Tentative d'escroquerie / Spam">Tentative d'escroquerie / Spam</option>
+                        <option value="Usurpation d'identité">Usurpation d'identité</option>
+                        <option value="Partage de contenu inapproprié">Partage de contenu inapproprié</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="generateOfficialEmail()">
+                    <i class="fa-solid fa-paper-plane"></i> Générer la plainte officielle
+                </button>
+            </div>
+        </section>
+
+        <section id="page-about" class="page-section">
+            <div class="card">
+                <h3 class="card-title"><i class="fa-solid fa-circle-info"></i> Conditions d'utilisation de la plateforme</h3>
+                <p style="margin-bottom: 1rem;">Cet outil est mis à disposition pour faciliter la mise en conformité et la sécurité au sein des applications de messagerie. L'utilisation abusive de ce système pour de faux signalements peut entraîner la suspension de vos propres accès.</p>
+                <h4 style="margin: 1.5rem 0 0.5rem 0; font-weight: 600;">Comment ça marche ?</h4>
+                <ul style="margin-left: 1.5rem; color: var(--text-muted);">
+                    <li>Saisissez le numéro au format international.</li>
+                    <li>Sélectionnez le motif exact de la violation.</li>
+                    <li>Le système prépare un courriel juridique standardisé prêt à être envoyé au département conformité de WhatsApp.</li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>Développeur : <span>JON SNOW TECH officiel</span></p>
+        <p style="margin-top: 0.5rem;">
+            <a href="https://whatsapp.com/channel/0029VbCQ9Mh1noz48V9wET2D" target="_blank">
+                <i class="fa-brands fa-whatsapp"></i> Rejoindre le Canal Officiel
+            </a>
+        </p>
+    </footer>
+
+    <script>
+        // Tableau pour stocker l'historique dans la session actuelle
+        let reportHistory = [];
+
+        // Fonction pour changer de page sans recharger (SPA)
+        function switchPage(pageId) {
+            // Désactiver toutes les sections et liens de nav
+            document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            
+            // Activer la section et le lien cliqués
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            document.getElementById(`nav-${pageId}`).classList.add('active');
+        }
+
+        // Fonction principale de génération d'email
+        function generateOfficialEmail() {
+            const phoneInput = document.getElementById('phoneNumber');
+            const infractionSelect = document.getElementById('infractionType');
+            
+            const number = phoneInput.value.trim();
+            const reason = infractionSelect.value;
+            
+            if (!number) {
+                alert('Un numéro de téléphone opérationnel est requis pour continuer.');
+                phoneInput.focus();
+                return;
+            }
+            
+            const recipient = "support@support.whatsapp.com";
+            const subject = encodeURIComponent(`SEVERE BREACH: Investigation Request for ${reason.toUpperCase()}`);
+            
+            const body = encodeURIComponent(
+                "To the WhatsApp Safety and Compliance Department,\n\n" +
+                "This is a formal notification regarding a severe and ongoing breach of your Terms of Service. I am requesting an immediate review and restrictive action against the following account due to malicious and persistent violations:\n\n" +
+                "OFFENDING ACCOUNT NUMBER: " + number + "\n" +
+                "NATURE OF INFRACTION: " + reason + "\n\n" +
+                "The user associated with this number has repeatedly engaged in targeted cyberbullying, threats, or abusive behavior, causing significant harm and compromising the safety standards of your platform.\n\n" +
+                "Please initiate an immediate investigation into this account's logs to protect the community from further violations.\n\n" +
+                "Regards,\n" +
+                "[Sent via Safety Reporting Assistant]"
+            );
+            
+            // Ajouter à l'historique de la session
+            addReportToHistory(number, reason);
+
+            // Ouvrir le client mail
+            const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${body}`;
+            window.location.href = mailtoUrl;
+        }
+
+        // Ajouter un élément dans le tableau de bord
+        function addReportToHistory(number, reason) {
+            const dateNow = new Date().toLocaleDateString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+            reportHistory.unshift({ number, date: dateNow });
+
+            const tbody = document.getElementById('history-logs');
+            tbody.innerHTML = ""; // Vider le message "aucun signalement"
+
+            reportHistory.forEach(item => {
+                const row = `<tr>
+                    <td><strong>${item.number}</strong></td>
+                    <td>${item.date}</td>
+                    <td><span class="status-badge">Envoyé (Mail)</span></td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+    </script>
+
+</body>
+</html>
