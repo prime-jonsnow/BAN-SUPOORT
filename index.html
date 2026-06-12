@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Incident Report Assistant</title>
+    <style>
+        /* Style Classique et Institutionnel */
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #f4f6f8;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .report-container {
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .header {
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 0 10px 0;
+        }
+
+        .header p {
+            font-size: 14px;
+            font-style: italic;
+            color: #555555;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            border: 1px solid #999999;
+            box-sizing: border-box;
+            background-color: #fafafa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            background-color: #ffffff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            border: 1px solid #1a1a1a;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #444444;
+            border-color: #444444;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 15px;
+            border-top: 1px dashed #cccccc;
+            font-size: 12px;
+            text-align: center;
+            color: #666666;
+        }
+
+        .footer span {
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .footer a {
+            color: #0066cc;
+            text-decoration: none;
+            display: block;
+            margin-top: 8px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="report-container">
+        <div class="header">
+            <h2>Incident Report Portal</h2>
+            <p>Official assistant for documentation and platform safety compliance.</p>
+        </div>
+
+        <div class="form-body">
+            <div class="form-group">
+                <label for="phoneNumber">Offending Party Phone Number</label>
+                <input type="text" id="phoneNumber" placeholder="Format: +1234567890" autocomplete="off">
+            </div>
+
+            <button onclick="generateOfficialEmail()">Generate Formal Complaint</button>
+        </div>
+
+        <div class="footer">
+            Developer: <span>JON SNOW TECH officiel</span>
+            <a href="https://whatsapp.com/channel/0029VbCQ9Mh1noz48V9wET2D" target="_blank">Official Channel</a>
+        </div>
+    </div>
+
+    <script>
+        function generateOfficialEmail() {
+            const phoneInput = document.getElementById('phoneNumber');
+            const number = phoneInput.value.trim();
+            
+            if (!number) {
+                alert('An operational phone number is required to proceed.');
+                phoneInput.focus();
+                return;
+            }
+            
+            const recipient = "support@support.whatsapp.com";
+            
+            // Sujet plus direct et formel
+            const subject = encodeURIComponent("SEVERE BREACH: Investigation Request for Persistent Harassment");
+            
+            // Corps du texte renforcé (mots plus forts, tournure juridique/officielle)
+            const body = encodeURIComponent(
+                "To the WhatsApp Safety and Compliance Department,\n\n" +
+                "This is a formal notification regarding a severe and ongoing breach of your Terms of Service. I am requesting an immediate review and restrictive action against the following account due to malicious and persistent harassment:\n\n" +
+                "OFFENDING ACCOUNT NUMBER: " + number + "\n\n" +
+                "The user associated with this number has repeatedly engaged in targeted cyberbullying, threats, and abusive behavior, causing significant harm and compromising the safety standards of your platform.\n\n" +
+                "Please initiate an immediate investigation into this account's logs to protect the community from further violations.\n\n" +
+                "Regards,\n" +
+                "[Sent via Safety Reporting Assistant]"
+            );
+            
+            const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${body}`;
+            
+            window.location.href = mailtoUrl;
+        }
+    </script>
+
+</body>
+</html>
